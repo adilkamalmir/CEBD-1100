@@ -71,23 +71,10 @@ def generate_points(coefs, min_val, max_val):
     return xs, np.polyval(coefs, xs)
 
 
-def main():
-    # Argument Parsing
-    parser = argparse.ArgumentParser(description='Process provided data files')
-    parser.add_argument('input_data_file', type=str,
-                       help='an input data file')
-    parser.add_argument('--input_names_file', '-n', type=str,
-                       help='an input names file')
-    args = parser.parse_args()
-
-    if not os.path.exists(args.input_data_file):
-        print("Input data file does not exist")
-        exit()
-
+def main(input_data_file, input_names_file):
     ############################################################################
     # parsing data without libraries
-
-    input_file = (args.input_data_file)
+    input_file = (input_data_file)
     output_file = "output.tmp"
     data = open(input_file, 'r')
     output_list = []
@@ -101,11 +88,8 @@ def main():
     output_list, headers = check_for_headers(output_list)
     list_of_col_names = output_list.pop(0)
 
-    if args.input_names_file:
-        if not os.path.exists(args.input_names_file):
-            print("Input name file does not exist")
-            exit()
-        list_of_col_names = get_headers(args.input_names_file)
+    if input_names_file:
+        list_of_col_names = get_headers(input_names_file)
 
     # Creating the output dictionary from the output list
     output_dict = [[row[i] for row in output_list] for i in range(len(list_of_col_names))]
@@ -169,6 +153,25 @@ def main():
     # sns.pairplot(output_df, kind="reg")
     # plt.savefig("myfigure.png")
 
+    return output_dict, output_dict_csv
+
 
 if __name__ == "__main__":
-    main()
+    # Argument Parsing
+    parser = argparse.ArgumentParser(description='Process provided data files')
+    parser.add_argument('input_data_file', type=str,
+                       help='an input data file')
+    parser.add_argument('--input_names_file', '-n', type=str,
+                       help='an input names file')
+    args = parser.parse_args()
+
+    if not os.path.exists(args.input_data_file):
+        print("Input data file does not exist")
+        exit()
+
+    if args.input_names_file:
+        if not os.path.exists(args.input_names_file):
+            print("Input name file does not exist")
+            exit()
+
+    main(args.input_data_file, args.input_names_file)
