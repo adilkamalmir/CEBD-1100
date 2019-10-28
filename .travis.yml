@@ -4,6 +4,4 @@ install:
   - pip install matplotlib
 # command to run tests
 script:
-  - python my_script.py hwk4_data/diabetes.data
-  - FILE=myfigure.png
-  - test -f myfigure.png && echo "$FILE exist"
+  - pytest
