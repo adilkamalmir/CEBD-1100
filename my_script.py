@@ -70,6 +70,37 @@ def generate_points(coefs, min_val, max_val):
     xs = np.arange(min_val, max_val, (max_val-min_val)/100)
     return xs, np.polyval(coefs, xs)
 
+def pairsplot (output_dict):
+    fig, axs = plt.subplots(len(output_dict.keys()), len(output_dict.keys()), figsize=(50,50))
+    for idx_col1, column1 in enumerate(output_dict.keys()):
+        for idx_col2, column2 in enumerate(output_dict.keys()):
+            x = output_dict[column1]
+            y = output_dict[column2]
+            axs[idx_col1, idx_col2].scatter(x, y)
+            axs[idx_col1, idx_col2].set(title="{0} x {1}".format(column1, column2), xlabel=column1, ylabel=column2)
+            # polynomial 1
+            coefs = np.polyfit(x, y, 1)
+            xs, new_line = generate_points(coefs, min(x), max(x))
+            l1 = axs[idx_col1, idx_col2].plot(xs, new_line, 'tab:red')
+            # polynomial 2
+            coefs = np.polyfit(x, y, 2)
+            xs, new_line = generate_points(coefs, min(x), max(x))
+            l2 = axs[idx_col1, idx_col2].plot(xs, new_line, 'tab:blue')
+            # polynomial 3
+            coefs = np.polyfit(x, y, 3)
+            xs, new_line = generate_points(coefs, min(x), max(x))
+            l3 = axs[idx_col1, idx_col2].plot(xs, new_line, 'tab:green')
+            # polynomial 4
+            coefs = np.polyfit(x, y, 4)
+            xs, new_line = generate_points(coefs, min(x), max(x))
+            l4 = axs[idx_col1, idx_col2].plot(xs, new_line, 'tab:cyan')
+            # formatting
+            box = axs[idx_col1, idx_col2].get_position()
+            axs[idx_col1, idx_col2].set_position([box.x0, box.y0, box.width * 1.2 , box.height * 1.2])
+    plt.tight_layout()
+    fig.legend((l1[0], l2[0], l3[0], l4[0]), ('Order 1', 'Order 2', 'Order 3', 'Order 4'), 'upper left')
+    plt.savefig("myfigure.png")
+
 
 def main(input_data_file, input_names_file):
     ############################################################################
@@ -114,44 +145,10 @@ def main(input_data_file, input_names_file):
         for row in csv_reader:
             for column, value in row.items():
                 output_dict_csv.setdefault(column, []).append(convert(value))
-    assert output_dict_csv == output_dict
 
     ############################################################################
     # plotting
-    fig, axs = plt.subplots(len(output_dict.keys()), len(output_dict.keys()), figsize=(50,50))
-    for idx_col1, column1 in enumerate(output_dict.keys()):
-        for idx_col2, column2 in enumerate(output_dict.keys()):
-            x = output_dict[column1]
-            y = output_dict[column2]
-            axs[idx_col1, idx_col2].scatter(x, y)
-            axs[idx_col1, idx_col2].set(title="{0} x {1}".format(column1, column2), xlabel=column1, ylabel=column2)
-            # polynomial 1
-            coefs = np.polyfit(x, y, 1)
-            xs, new_line = generate_points(coefs, min(x), max(x))
-            l1 = axs[idx_col1, idx_col2].plot(xs, new_line, 'tab:red')
-            # polynomial 2
-            coefs = np.polyfit(x, y, 2)
-            xs, new_line = generate_points(coefs, min(x), max(x))
-            l2 = axs[idx_col1, idx_col2].plot(xs, new_line, 'tab:blue')
-            # polynomial 3
-            coefs = np.polyfit(x, y, 3)
-            xs, new_line = generate_points(coefs, min(x), max(x))
-            l3 = axs[idx_col1, idx_col2].plot(xs, new_line, 'tab:green')
-            # polynomial 4
-            coefs = np.polyfit(x, y, 4)
-            xs, new_line = generate_points(coefs, min(x), max(x))
-            l4 = axs[idx_col1, idx_col2].plot(xs, new_line, 'tab:cyan')
-            # formatting
-            box = axs[idx_col1, idx_col2].get_position()
-            axs[idx_col1, idx_col2].set_position([box.x0, box.y0, box.width * 1.2 , box.height * 1.2])
-    plt.tight_layout()
-    fig.legend((l1[0], l2[0], l3[0], l4[0]), ('Order 1', 'Order 2', 'Order 3', 'Order 4'), 'upper left')
-    plt.savefig("myfigure.png")
-
-    # seaborne option
-    # output_df = pd.DataFrame.from_dict(output_dict)
-    # sns.pairplot(output_df, kind="reg")
-    # plt.savefig("myfigure.png")
+    pairsplot(output_dict)
 
     return output_dict, output_dict_csv
 
