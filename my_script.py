@@ -10,9 +10,7 @@ import os
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
-# from collections import Counter
-# import seaborn as sns
-# import pandas as pd
+from collections import Counter
 
 
 # setting appropriate data type
@@ -70,6 +68,8 @@ def generate_points(coefs, min_val, max_val):
     xs = np.arange(min_val, max_val, (max_val-min_val)/100)
     return xs, np.polyval(coefs, xs)
 
+
+# function for creating pairs plots
 def pairsplot (output_dict):
     fig, axs = plt.subplots(len(output_dict.keys()), len(output_dict.keys()), figsize=(50,50))
     for idx_col1, column1 in enumerate(output_dict.keys()):
@@ -100,6 +100,48 @@ def pairsplot (output_dict):
     plt.tight_layout()
     fig.legend((l1[0], l2[0], l3[0], l4[0]), ('Order 1', 'Order 2', 'Order 3', 'Order 4'), 'upper left')
     plt.savefig("myfigure.png")
+
+
+# Function to check if given data is discrete or not
+def check_if_discrete(data):
+    discrete_percentage = 0.10
+    total_number = len(data)
+    unique_data = Counter(data)
+    unique_number = len(unique_data.keys())
+    unique_percentage = unique_number/total_number
+    return True if unique_percentage <= discrete_percentage else False
+
+
+# Function to compile summary of given data
+def summary(output_dict):
+    try:
+        data = output_dict[args.summary]
+        print("Summary for %s:" % args.summary)
+        min = np.min(data)
+        print("Min: %s" % min)
+        max = np.max(data)
+        print("Max: %s" % max)
+        mean = np.mean(data)
+        print("Mean: %s" % mean)
+        sd = np.std(data)
+        print("Standard Deviation: %s" % sd)
+        check_if_discrete(data)
+        discrete = check_if_discrete(data)
+        print("Discrete Data: %s" % discrete)
+        return min, max, mean, sd
+
+    except KeyError:
+        print("Oops! %s is not a valid column name for this data set" % args.summary)
+        exit()
+
+
+# Function to check if given headers is in data
+def is_column(data, column):
+    try:
+        data[column]
+        return True
+    except KeyError:
+        return False
 
 
 def main(input_data_file, input_names_file):
@@ -148,7 +190,37 @@ def main(input_data_file, input_names_file):
 
     ############################################################################
     # plotting
-    pairsplot(output_dict)
+    if args.plot:
+        pairsplot(output_dict)
+
+    ############################################################################
+    # column summary
+    if args.summary:
+        summary(output_dict)
+    ############################################################################
+    # interpolate
+    if args.interpolate:
+        if len(args.interpolate) != 3:
+            print("Bummer! For interpolate you need to provide exactly 3 arguments, check help!")
+        elif args.interpolate[0] == args.interpolate[1]:
+            print("Hey! You provided the same column name twice!")
+        elif not is_column(output_dict, args.interpolate[0]) or not is_column(output_dict, args.interpolate[1]):
+            print("Hey! One of your columns names is not valid!")
+        else:
+            pass
+    # add
+    # an
+    # optional
+    # command - line
+    # argument
+    # "--interpolate"
+    # that
+    # accepts( in this
+    # order) two
+    # column
+    # names and a
+    # value
+    # for the first column, verifies valid column names, that the value provided is within the min / max of the first column ( and recommends using --summary if not ), verifies whether or not it makes "sense" to interpolate values for the second column (i.e.if the variable is "sex", it doesn't make sense to interpolate a value between male and female), and if so then interpolates a value for the second column using a first, second, and third order polynomial and displays those results.
 
     return output_dict, output_dict_csv
 
@@ -160,6 +232,10 @@ if __name__ == "__main__":
                        help='an input data file')
     parser.add_argument('--input_names_file', '-n', type=str,
                        help='an input names file')
+    parser.add_argument('--summary', '-s', type=str,
+                        help='provide a column name to generate summary')
+    parser.add_argument('-i', '--interpolate', nargs='+', help='to interpolate, provide two column names and a value for the first column (in this order)')
+    parser.add_argument('--plot', '-p', action='store_true', help='set flag to generate pairs plot')
     args = parser.parse_args()
 
     if not os.path.exists(args.input_data_file):
