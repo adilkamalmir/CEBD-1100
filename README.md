@@ -2,7 +2,7 @@
 Python-CEBD-1100
 
 Usage: 
-python my_script.py <input data file>
+python my_script.py input_data_file
 
 Optionally, you can provide an input names file as well for headers with an -n flag 
 
