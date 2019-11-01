@@ -7,5 +7,5 @@ script:
   - python my_script.py
   - python my_script.py hwk4_data/diabetes.data
   - python my_script.py hwk4_data/diabetes.data -p
-  - my_script.py hwk4_data/diabetes.data -s age
-  - my_script.py hwk4_data/diabetes.data -i age bmi 0.1
+  - python my_script.py hwk4_data/diabetes.data -s age
+  - python my_script.py hwk4_data/diabetes.data -i age bmi 0.1
