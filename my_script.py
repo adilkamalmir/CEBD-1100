@@ -144,6 +144,38 @@ def is_column(data, column):
         return False
 
 
+# Function for interpolation
+def interpolate(output_dict):
+    if len(args.interpolate) != 3:
+        print("Bummer! For interpolate you need to provide exactly 3 arguments, check help!")
+    elif args.interpolate[0] == args.interpolate[1]:
+        print("Hey! You provided the same column name twice!")
+    elif not is_column(output_dict, args.interpolate[0]) or not is_column(output_dict, args.interpolate[1]):
+        print("Hey! One of your columns names is not valid!")
+    elif type(convert(args.interpolate[2])) != type(output_dict[args.interpolate[0]][0]):
+        print("Hey! the value your provided is not the same type as %s data" % args.interpolate[0])
+    elif convert(args.interpolate[2]) < np.min(output_dict[args.interpolate[0]]) or convert(args.interpolate[2]) > np.max(output_dict[args.interpolate[0]]):
+        print("Hey! the value your provided is not within range of %s, try using the --summary option" % args.interpolate[0])
+    elif check_if_discrete(output_dict[args.interpolate[1]]):
+        print("Hey! %s is not a continuous data therefore can not interpolate" % args.interpolate[1])
+    else:
+        print("Interpolation Result:")
+        x = output_dict[args.interpolate[0]]
+        y = output_dict[args.interpolate[1]]
+        # polynomial 1
+        l1 = np.polyfit(x, y, 1)
+        l1_val = np.polyval(l1, convert(args.interpolate[2]))
+        print("Order 1 value: %s" %l1_val)
+        # polynomial 2
+        l2 = np.polyfit(x, y, 2)
+        l2_val = np.polyval(l2, convert(args.interpolate[2]))
+        print("Order 2 value: %s" %l2_val)
+        # polynomial 3
+        l3 = np.polyfit(x, y, 3)
+        l3_val = np.polyval(l3, convert(args.interpolate[2]))
+        print("Order 3 value: %s" %l3_val)
+
+
 def main(input_data_file, input_names_file):
     ############################################################################
     # parsing data without libraries
@@ -200,27 +232,7 @@ def main(input_data_file, input_names_file):
     ############################################################################
     # interpolate
     if args.interpolate:
-        if len(args.interpolate) != 3:
-            print("Bummer! For interpolate you need to provide exactly 3 arguments, check help!")
-        elif args.interpolate[0] == args.interpolate[1]:
-            print("Hey! You provided the same column name twice!")
-        elif not is_column(output_dict, args.interpolate[0]) or not is_column(output_dict, args.interpolate[1]):
-            print("Hey! One of your columns names is not valid!")
-        else:
-            pass
-    # add
-    # an
-    # optional
-    # command - line
-    # argument
-    # "--interpolate"
-    # that
-    # accepts( in this
-    # order) two
-    # column
-    # names and a
-    # value
-    # for the first column, verifies valid column names, that the value provided is within the min / max of the first column ( and recommends using --summary if not ), verifies whether or not it makes "sense" to interpolate values for the second column (i.e.if the variable is "sex", it doesn't make sense to interpolate a value between male and female), and if so then interpolates a value for the second column using a first, second, and third order polynomial and displays those results.
+        interpolate(output_dict)
 
     return output_dict, output_dict_csv
 
