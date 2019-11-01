@@ -4,8 +4,18 @@ install:
   - pip install matplotlib
 # command to run tests
 script:
-  - python my_script.py
+  - if python my_script.py; then echo 1; else echo 0; fi
   - python my_script.py hwk4_data/diabetes.data
   - python my_script.py hwk4_data/diabetes.data -p
+  - if python my_script.py -p; then echo 1; else echo 0; fi
   - python my_script.py hwk4_data/diabetes.data -s age
+  - if python my_script.py -s age; then echo 1; else echo 0; fi
+  - if python my_script.py hwk4_data/diabetes.data -s adil; then echo 1; else echo 0; fi
   - python my_script.py hwk4_data/diabetes.data -i age bmi 0.1
+  - if python my_script.py -i age bmi 0.1; then echo 1; else echo 0; fi
+  - if python my_script.py hwk4_data/diabetes.data -i age age; then echo 1; else echo 0; fi
+  - if python my_script.py hwk4_data/diabetes.data -i age age 0.1; then echo 1; else echo 0; fi
+  - if python my_script.py hwk4_data/diabetes.data -i age adil 0.1; then echo 1; else echo 0; fi
+  - if python my_script.py hwk4_data/diabetes.data -i adil age 0.1; then echo 1; else echo 0; fi
+  - if python my_script.py hwk4_data/diabetes.data -i age bmi 1; then echo 1; else echo 0; fi
+  - if python my_script.py hwk4_data/diabetes.data -i age sex 0.1; then echo 1; else echo 0; fi

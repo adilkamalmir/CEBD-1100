@@ -7,6 +7,7 @@
 # Libraries
 import argparse
 import os
+import sys
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
@@ -132,7 +133,7 @@ def summary(output_dict):
 
     except KeyError:
         print("Oops! %s is not a valid column name for this data set" % args.summary)
-        exit()
+        exit(1)
 
 
 # Function to check if given headers is in data
@@ -148,16 +149,22 @@ def is_column(data, column):
 def interpolate(output_dict):
     if len(args.interpolate) != 3:
         print("Bummer! For interpolate you need to provide exactly 3 arguments, check help!")
+        exit(1)
     elif args.interpolate[0] == args.interpolate[1]:
         print("Hey! You provided the same column name twice!")
+        exit(1)
     elif not is_column(output_dict, args.interpolate[0]) or not is_column(output_dict, args.interpolate[1]):
         print("Hey! One of your columns names is not valid!")
+        exit(1)
     elif type(convert(args.interpolate[2])) != type(output_dict[args.interpolate[0]][0]):
         print("Hey! the value your provided is not the same type as %s data" % args.interpolate[0])
+        exit(1)
     elif convert(args.interpolate[2]) < np.min(output_dict[args.interpolate[0]]) or convert(args.interpolate[2]) > np.max(output_dict[args.interpolate[0]]):
         print("Hey! the value your provided is not within range of %s, try using the --summary option" % args.interpolate[0])
+        exit(1)
     elif check_if_discrete(output_dict[args.interpolate[1]]):
         print("Hey! %s is not a continuous data therefore can not interpolate" % args.interpolate[1])
+        exit(1)
     else:
         print("Interpolation Result:")
         x = output_dict[args.interpolate[0]]
