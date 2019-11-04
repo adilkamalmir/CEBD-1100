@@ -159,8 +159,8 @@ def interpolate(output_dict, column1, column2, column1_val):
     elif convert(column1_val) < np.min(output_dict[column1]) or convert(column1_val) > np.max(output_dict[column1]):
         print("Hey! the value your provided is not within range of \'%s\', try using the --summary option" % column1)
         exit(1)
-    elif check_if_discrete(output_dict[column2]):
-        print("Hey! \'%s\' is not a continuous data therefore can not interpolate" % column2)
+    elif check_if_discrete(output_dict[column1]) or check_if_discrete(output_dict[column2]):
+        print("Hey! One of your provided columns does not have continuous data therefore can not interpolate")
         exit(1)
     else:
         print("Interpolation Result:")
