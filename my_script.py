@@ -267,7 +267,8 @@ def main():
             if len(args.interpolate) != 3:
                 print("Bummer! For interpolate you need to provide exactly 3 arguments, check help!")
                 exit(1)
-            interpolate(output_dict, args.interpolate[0], args.interpolate[1], args.interpolate[2])
+            else:
+                interpolate(output_dict, args.interpolate[0], args.interpolate[1], args.interpolate[2])
         except IndexError:
             print("Bummer! For interpolate you need to provide exactly 3 arguments, check help!")
             exit(1)
