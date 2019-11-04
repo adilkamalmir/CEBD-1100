@@ -9,6 +9,16 @@ script:
   - python my_script.py hwk4_data/diabetes.data -p
   - if python my_script.py -p; then echo 1; else echo 0; fi
   - python my_script.py hwk4_data/diabetes.data -s age
+  - python my_script.py hwk4_data/diabetes.data -s sex
+  - python my_script.py hwk4_data/diabetes.data -s bmi
+  - python my_script.py hwk4_data/diabetes.data -s map
+  - python my_script.py hwk4_data/diabetes.data -s tc
+  - python my_script.py hwk4_data/diabetes.data -s ldl
+  - python my_script.py hwk4_data/diabetes.data -s hdl
+  - python my_script.py hwk4_data/diabetes.data -s tch
+  - python my_script.py hwk4_data/diabetes.data -s ltg
+  - python my_script.py hwk4_data/diabetes.data -s glu
+  - python my_script.py hwk4_data/diabetes.data -s y
   - if python my_script.py -s age; then echo 1; else echo 0; fi
   - if python my_script.py hwk4_data/diabetes.data -s adil; then echo 1; else echo 0; fi
   - python my_script.py hwk4_data/diabetes.data -i age bmi 0.1
