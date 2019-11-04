@@ -180,24 +180,25 @@ def interpolate(output_dict, column1, column2, column1_val):
         print("Order 3 value: %s" %l3_val)
 
 
-def main():
-    # Argument Parsing
-    parser = argparse.ArgumentParser(description='Process provided data files')
+def main(args=None):
+    if not args:
+        # Argument Parsing
+        parser = argparse.ArgumentParser(description='Process provided data files')
 
-    parser.add_argument('input_data_file', type=str,
-                       help='an input data file')
+        parser.add_argument('input_data_file', type=str,
+                           help='an input data file')
 
-    parser.add_argument('--input_names_file', '-n', type=str,
-                       help='an input names file')
+        parser.add_argument('--input_names_file', '-n', type=str,
+                           help='an input names file')
 
-    parser.add_argument('--summary', '-s', type=str,
-                        help='provide a column name to generate summary')
+        parser.add_argument('--summary', '-s', type=str,
+                            help='provide a column name to generate summary')
 
-    parser.add_argument('-i', '--interpolate', nargs='+', help='to interpolate, provide two column names and a value for the first column (in this order)')
+        parser.add_argument('-i', '--interpolate', nargs='+', help='to interpolate, provide two column names and a value for the first column (in this order)')
 
-    parser.add_argument('--plot', '-p', action='store_true', help='set flag to generate pairs plot')
+        parser.add_argument('--plot', '-p', action='store_true', help='set flag to generate pairs plot')
 
-    args = parser.parse_args()
+        args = parser.parse_args()
 
     if not os.path.exists(args.input_data_file):
         print("Input data file does not exist")
