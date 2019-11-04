@@ -114,10 +114,10 @@ def check_if_discrete(data):
 
 
 # Function to compile summary of given data
-def summary(output_dict):
+def summary(output_dict, column):
     try:
-        data = output_dict[args.summary]
-        print("Summary for %s:" % args.summary)
+        data = output_dict[column]
+        print("Summary for %s:" % column)
         min = np.min(data)
         print("Min: %s" % min)
         max = np.max(data)
@@ -132,7 +132,7 @@ def summary(output_dict):
         return min, max, mean, sd
 
     except KeyError:
-        print("Oops! %s is not a valid column name for this data set" % args.summary)
+        print("Oops! %s is not a valid column name for this data set" % column)
         exit(1)
 
 
@@ -146,47 +146,71 @@ def is_column(data, column):
 
 
 # Function for interpolation
-def interpolate(output_dict):
-    if len(args.interpolate) != 3:
-        print("Bummer! For interpolate you need to provide exactly 3 arguments, check help!")
-        exit(1)
-    elif args.interpolate[0] == args.interpolate[1]:
+def interpolate(output_dict, column1, column2, column1_val):
+    if column1 == column2:
         print("Hey! You provided the same column name twice!")
         exit(1)
-    elif not is_column(output_dict, args.interpolate[0]) or not is_column(output_dict, args.interpolate[1]):
+    elif not is_column(output_dict, column1) or not is_column(output_dict, column2):
         print("Hey! One of your columns names is not valid!")
         exit(1)
-    elif type(convert(args.interpolate[2])) != type(output_dict[args.interpolate[0]][0]):
-        print("Hey! the value your provided is not the same type as %s data" % args.interpolate[0])
+    elif type(convert(column1_val)) != type(output_dict[column1][0]):
+        print("Hey! the value your provided is not the same type as \'%s\' data" % column1)
         exit(1)
-    elif convert(args.interpolate[2]) < np.min(output_dict[args.interpolate[0]]) or convert(args.interpolate[2]) > np.max(output_dict[args.interpolate[0]]):
-        print("Hey! the value your provided is not within range of %s, try using the --summary option" % args.interpolate[0])
+    elif convert(column1_val) < np.min(output_dict[column1]) or convert(column1_val) > np.max(output_dict[column1]):
+        print("Hey! the value your provided is not within range of \'%s\', try using the --summary option" % column1)
         exit(1)
-    elif check_if_discrete(output_dict[args.interpolate[1]]):
-        print("Hey! %s is not a continuous data therefore can not interpolate" % args.interpolate[1])
+    elif check_if_discrete(output_dict[column2]):
+        print("Hey! \'%s\' is not a continuous data therefore can not interpolate" % column2)
         exit(1)
     else:
         print("Interpolation Result:")
-        x = output_dict[args.interpolate[0]]
-        y = output_dict[args.interpolate[1]]
+        x = output_dict[column1]
+        y = output_dict[column2]
         # polynomial 1
         l1 = np.polyfit(x, y, 1)
-        l1_val = np.polyval(l1, convert(args.interpolate[2]))
+        l1_val = np.polyval(l1, convert(column1_val))
         print("Order 1 value: %s" %l1_val)
         # polynomial 2
         l2 = np.polyfit(x, y, 2)
-        l2_val = np.polyval(l2, convert(args.interpolate[2]))
+        l2_val = np.polyval(l2, convert(column1_val))
         print("Order 2 value: %s" %l2_val)
         # polynomial 3
         l3 = np.polyfit(x, y, 3)
-        l3_val = np.polyval(l3, convert(args.interpolate[2]))
+        l3_val = np.polyval(l3, convert(column1_val))
         print("Order 3 value: %s" %l3_val)
 
 
-def main(input_data_file, input_names_file):
+def main():
+    # Argument Parsing
+    parser = argparse.ArgumentParser(description='Process provided data files')
+
+    parser.add_argument('input_data_file', type=str,
+                       help='an input data file')
+
+    parser.add_argument('--input_names_file', '-n', type=str,
+                       help='an input names file')
+
+    parser.add_argument('--summary', '-s', type=str,
+                        help='provide a column name to generate summary')
+
+    parser.add_argument('-i', '--interpolate', nargs='+', help='to interpolate, provide two column names and a value for the first column (in this order)')
+
+    parser.add_argument('--plot', '-p', action='store_true', help='set flag to generate pairs plot')
+
+    args = parser.parse_args()
+
+    if not os.path.exists(args.input_data_file):
+        print("Input data file does not exist")
+        exit()
+
+    if args.input_names_file:
+        if not os.path.exists(args.input_names_file):
+            print("Input name file does not exist")
+            exit()
+
     ############################################################################
     # parsing data without libraries
-    input_file = (input_data_file)
+    input_file = (args.input_data_file)
     output_file = "output.tmp"
     data = open(input_file, 'r')
     output_list = []
@@ -200,8 +224,8 @@ def main(input_data_file, input_names_file):
     output_list, headers = check_for_headers(output_list)
     list_of_col_names = output_list.pop(0)
 
-    if input_names_file:
-        list_of_col_names = get_headers(input_names_file)
+    if args.input_names_file:
+        list_of_col_names = get_headers(args.input_names_file)
 
     # Creating the output dictionary from the output list
     output_dict = [[row[i] for row in output_list] for i in range(len(list_of_col_names))]
@@ -235,35 +259,22 @@ def main(input_data_file, input_names_file):
     ############################################################################
     # column summary
     if args.summary:
-        summary(output_dict)
+        summary(output_dict, args.summary)
     ############################################################################
     # interpolate
     if args.interpolate:
-        interpolate(output_dict)
+        try:
+            if len(args.interpolate) != 3:
+                print("Bummer! For interpolate you need to provide exactly 3 arguments, check help!")
+                exit(1)
+            interpolate(output_dict, args.interpolate[0], args.interpolate[1], args.interpolate[2])
+        except IndexError:
+            print("Bummer! For interpolate you need to provide exactly 3 arguments, check help!")
+            exit(1)
+
 
     return output_dict, output_dict_csv
 
 
 if __name__ == "__main__":
-    # Argument Parsing
-    parser = argparse.ArgumentParser(description='Process provided data files')
-    parser.add_argument('input_data_file', type=str,
-                       help='an input data file')
-    parser.add_argument('--input_names_file', '-n', type=str,
-                       help='an input names file')
-    parser.add_argument('--summary', '-s', type=str,
-                        help='provide a column name to generate summary')
-    parser.add_argument('-i', '--interpolate', nargs='+', help='to interpolate, provide two column names and a value for the first column (in this order)')
-    parser.add_argument('--plot', '-p', action='store_true', help='set flag to generate pairs plot')
-    args = parser.parse_args()
-
-    if not os.path.exists(args.input_data_file):
-        print("Input data file does not exist")
-        exit()
-
-    if args.input_names_file:
-        if not os.path.exists(args.input_names_file):
-            print("Input name file does not exist")
-            exit()
-
-    main(args.input_data_file, args.input_names_file)
+    main()
