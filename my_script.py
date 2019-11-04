@@ -7,6 +7,7 @@
 # Libraries
 import argparse
 import os
+import sys
 import csv
 import matplotlib.pyplot as plt
 import numpy as np
@@ -179,7 +180,7 @@ def interpolate(output_dict, column1, column2, column1_val):
         print("Order 3 value: %s" %l3_val)
 
 
-def parse_args():
+def parse_args(args):
     parser = argparse.ArgumentParser(description='Process provided data files')
 
     parser.add_argument('input_data_file', type=str,
@@ -196,14 +197,16 @@ def parse_args():
 
     parser.add_argument('--plot', '-p', action='store_true', help='set flag to generate pairs plot')
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
     return args
 
 
 def main(argv=None):
+    if argv:
+        args = parse_args(argv)
     if not argv:
         # Argument Parsing
-        args = parse_args()
+        args = parse_args(sys.argv[1:])
 
     if not os.path.exists(args.input_data_file):
         print("Input data file does not exist")

@@ -30,3 +30,4 @@ script:
   - if python my_script.py hwk4_data/diabetes.data -i age bmi 1; then echo 1; else echo 0; fi
   - if python my_script.py hwk4_data/diabetes.data -i age sex 0.1; then echo 1; else echo 0; fi
   - if python my_script.py hwk4_data/diabetes.data -i sex age 0.1; then echo 1; else echo 0; fi
+  - pytest
