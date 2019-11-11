@@ -2,6 +2,7 @@ from sklearn.datasets import load_wine
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+from collections import Counter
 
 
 # function for creating pairs plots
@@ -9,6 +10,7 @@ def plot (output_dict, color_column, size_column, size_scale=None, size_min=None
     if not os.path.exists("figures/color_{0}_size_{1}".format(color_column, size_column)):
         os.mkdir("figures/color_{0}_size_{1}".format(color_column, size_column))
     color = output_dict[color_column]
+    unique_color = Counter(color)
     size = output_dict[size_column]
     if size_min:
         min_size = np.min(size)
@@ -22,26 +24,29 @@ def plot (output_dict, color_column, size_column, size_scale=None, size_min=None
             x = output_dict[column1]
             y = output_dict[column2]
             plt.figure()
-            plt.scatter(x, y, c=color, s=size, label=color)
+            scatter = plt.scatter(x, y, c=color, s=size)
             # polynomial 1
             coefs = np.polyfit(x, y, 1)
             xs, new_line = generate_points(coefs, min(x), max(x))
-            plt.plot(xs, new_line, 'tab:red')
+            l1 = plt.plot(xs, new_line, 'tab:red', label='Order 1')
             # polynomial 2
             coefs = np.polyfit(x, y, 2)
             xs, new_line = generate_points(coefs, min(x), max(x))
-            plt.plot(xs, new_line, 'tab:blue')
+            l2 = plt.plot(xs, new_line, 'tab:blue', label='Order 2')
             # polynomial 3
             coefs = np.polyfit(x, y, 3)
             xs, new_line = generate_points(coefs, min(x), max(x))
-            plt.plot(xs, new_line, 'tab:green')
+            l3 = plt.plot(xs, new_line, 'tab:green', label='Order 3')
             # polynomial 4
             coefs = np.polyfit(x, y, 4)
             xs, new_line = generate_points(coefs, min(x), max(x))
-            plt.plot(xs, new_line, 'tab:orange')
+            l4 = plt.plot(xs, new_line, 'tab:orange', label='Order 4')
             plt.xlabel(column1)
             plt.ylabel(column2)
             plt.title("{0} x {1}".format(column1, column2))
+            lg1 = plt.legend([l1[0], l2[0], l3[0], l4[0]], ['Order 1', 'Order 2', 'Order 3', 'Order 4'], loc="upper right", title="Polynomial Order")
+            lg2 = plt.legend(handles=scatter.legend_elements()[0], labels=unique_color.keys(), loc="upper left", title=color_column)
+            plt.gca().add_artist(lg1)
             plt.savefig("figures/color_{0}_size_{1}/{2}_x_{3}.png".format(color_column, size_column, column1.replace('/', '_'), column2.replace('/', '_')))
             plt.close()
 
@@ -72,7 +77,7 @@ def main():
 
     # plotting
     plot(output_dict, "cultivars", "alcohol", 5, True)
-    plot(output_dict, "cultivars", "color_intensity")
+    # plot(output_dict, "cultivars", "color_intensity")
 
 if __name__ == "__main__":
     main()
