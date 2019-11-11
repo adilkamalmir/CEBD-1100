@@ -21,7 +21,7 @@ Findings:
 
 ![Figure 7](https://github.com/adilkamalmir/python/blob/master/figures/color_cultivars_size_alcohol/flavanoids_x_ash.png)
 
-![Figure 8](https://github.com/adilkamalmir/python/blob/master/figures/color_cultivars_size_alcohol/flavanoids_x_color_intensity.png.png)
+![Figure 8](https://github.com/adilkamalmir/python/blob/master/figures/color_cultivars_size_alcohol/flavanoids_x_color_intensity.png)
 
 ![Figure 9](https://github.com/adilkamalmir/python/blob/master/figures/color_cultivars_size_alcohol/flavanoids_x_hue.png)
 
