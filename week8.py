@@ -77,7 +77,7 @@ def main():
 
     # plotting
     plot(output_dict, "cultivars", "alcohol", 5, True)
-    # plot(output_dict, "cultivars", "color_intensity")
+    plot(output_dict, "cultivars", "color_intensity")
 
 if __name__ == "__main__":
     main()
