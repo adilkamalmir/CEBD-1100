@@ -72,12 +72,13 @@ def generate_points(coefs, min_val, max_val):
 
 # function for creating pairs plots
 def pairsplot (output_dict):
+    wine_cat = output_dict['0']
     fig, axs = plt.subplots(len(output_dict.keys()), len(output_dict.keys()), figsize=(50,50))
     for idx_col1, column1 in enumerate(output_dict.keys()):
         for idx_col2, column2 in enumerate(output_dict.keys()):
             x = output_dict[column1]
             y = output_dict[column2]
-            axs[idx_col1, idx_col2].scatter(x, y)
+            axs[idx_col1, idx_col2].scatter(x, y, c=wine_cat)
             axs[idx_col1, idx_col2].set(title="{0} x {1}".format(column1, column2), xlabel=column1, ylabel=column2)
             # polynomial 1
             coefs = np.polyfit(x, y, 1)
