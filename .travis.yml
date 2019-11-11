@@ -2,6 +2,7 @@ language: python
 # command to install dependencies
 install:
   - pip install matplotlib
+  - pip install sklearn
 # command to run tests
 script:
   - if python my_script.py; then echo 1; else echo 0; fi
@@ -31,3 +32,5 @@ script:
   - if python my_script.py hwk4_data/diabetes.data -i age sex 0.1; then echo 1; else echo 0; fi
   - if python my_script.py hwk4_data/diabetes.data -i sex age 0.1; then echo 1; else echo 0; fi
   - pytest
+  # week8
+  - python week8.py
