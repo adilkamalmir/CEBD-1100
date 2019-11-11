@@ -44,11 +44,15 @@ def plot (output_dict, color_column, size_column, size_scale=None, size_min=None
             plt.xlabel(column1)
             plt.ylabel(column2)
             plt.title("{0} x {1}".format(column1, column2))
-            lg1 = plt.legend([l1[0], l2[0], l3[0], l4[0]], ['Order 1', 'Order 2', 'Order 3', 'Order 4'], loc="upper right", title="Polynomial Order")
-            lg2 = plt.legend(handles=scatter.legend_elements()[0], labels=unique_color.keys(), loc="upper left", title=color_column)
+            lg1 = plt.legend([l1[0], l2[0], l3[0], l4[0]], ['Order 1', 'Order 2', 'Order 3', 'Order 4'],
+                             loc="upper right", title="Polynomial Order")
+            lg2 = plt.legend(handles=scatter.legend_elements()[0], labels=unique_color.keys(),
+                             loc="upper left", title=color_column)
             plt.gca().add_artist(lg1)
             plt.tight_layout()
-            plt.savefig("figures/color_{0}_size_{1}/{2}_x_{3}.png".format(color_column, size_column, column1.replace('/', '_'), column2.replace('/', '_')))
+            plt.savefig("figures/color_{0}_size_{1}/{2}_x_{3}.png".format(color_column, size_column,
+                                                                          column1.replace('/', '_'),
+                                                                          column2.replace('/', '_')))
             plt.close()
 
 
@@ -79,6 +83,7 @@ def main():
     # plotting
     plot(output_dict, "cultivars", "alcohol", 5, True)
     plot(output_dict, "cultivars", "color_intensity")
+
 
 if __name__ == "__main__":
     main()
