@@ -1,6 +1,8 @@
 .DS_Store
+figures/.DS_Store
 .idea/
 __pycache__/
+pytest-env/
 myfigure.png
 out.csv
 output.tmp
