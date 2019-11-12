@@ -1,5 +1,4 @@
-# python
-Python-CEBD-1100
+# Python-CEBD-1100
 
 Usage: 
 python my_script.py input_data_file
