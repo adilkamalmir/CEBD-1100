@@ -45,7 +45,7 @@ print("Adjusted Rand Score: %s" % metrics.adjusted_rand_score(y_test, k_means_2.
 print("Homogeneity Score: %s" % metrics.homogeneity_score(y_test, k_means_2.labels_))
 print("\n")
 
-print("Combined Score")
+print("Combined Score of both halves")
 combined_y_train = np.concatenate((y_train, y_test))
 new_combined_y_train = np.concatenate((k_means_1.labels_, k_means_2.labels_))
 print("Accuracy Score: %s" % metrics.accuracy_score(combined_y_train, new_combined_y_train))
