@@ -2,7 +2,7 @@
 figures/.DS_Store
 .idea/
 __pycache__/
-pytest-env/
+venv/
 myfigure.png
 out.csv
 output.tmp

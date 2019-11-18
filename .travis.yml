@@ -5,6 +5,7 @@ python:
 install:
   - pip install matplotlib
   - pip install sklearn
+  - pip install pyfiglet
 # command to run tests
 script:
   - if python my_script.py; then echo 1; else echo 0; fi
@@ -36,3 +37,5 @@ script:
   - pytest
   # week8
   - python week8.py
+  # week9
+  - python week9.py
